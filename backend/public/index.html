@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Clinic</title>
+</head>
+<body>
+    <span id="answer"></span>
+    <!--
+    <br>
+    <div class="result">
+        <script>
+            // Select DOM elements to display data
+            let result = document.querySelector(".result");
+            let answer = document.querySelector("#answer");
+            
+            // Fetch doctor data from backend and log it
+            async function loadData(){
+                // await pauses execution until fetch completes
+                const data = await fetch("http://localhost:3000/doctor/");
+                // Convert response to JSON format
+                const result = await data.json();
+                console.log(result);
+                answer.textContent = result.message;
+                
+                // result is the JSON response from the server, which contains a property called doctor. 
+                // We are assigning that property to the doctors variable.
+                const doctors = result.doctor;
+                doctors.forEach((dr) => {
+                    console.log("print", dr);
+                });
+            }
+            loadData();
+        </script>
+    </div>
+    <br>
+    -->
+    <!-- -------------------- New code -------------------- -->
+    <h1 class="maintitle">Hello, this is a list of doctors</h1>
+    
+    <span id="answer"></span>
+    <div class="result"></div>
+    
+    <!-- Form to add new doctor -->
+    <form id="frm">
+        <div class="input-control">
+            <label for="drname">Doctor Name</label>
+            <input type="text" id="drname">
+        </div>
+
+        <div class="input-control">
+            <label for="">Doctor Last Name</label>
+            <input type="text" id="drfamily">
+        </div>
+
+        <div class="input-control">
+            <label for="">City</label>
+            <!-- Options will be added dynamically via JavaScript -->
+            <select name="" id="city"></select>
+        </div>
+
+        <div class="input-control">
+            <label for="">Speciality</label>
+            <!-- Options will be added dynamically via JavaScript -->
+            <select name="" id="spec"></select>
+        </div>
+        <button>Add a new Dr</button>
+    </form>
+
+    <p class="wlc"></p>
+
+    <script>
+        // Select elements to display messages and results
+        let a = document.querySelector("#answer")
+        let b = document.querySelector(".result")
+
+        // Fetches all doctors from backend and displays them on the page
+        async function loadData() {
+            // Clear previous content
+            b.innerHTML = ""
+            
+            // Fetch doctors from backend API
+            const data = await fetch("http://localhost:3000/doctor/")
+            const final = await data.json()
+            console.log(final)
+            
+            // Display server message
+            a.textContent = final.message
+            console.log(final.doctor)
+            
+            // Get array of doctors from response
+            let B = final.doctor
+           
+            // Loop through each doctor and create HTML elements
+            B.forEach(element => {
+                // Create a paragraph to hold all doctor info
+                let par = document.createElement("p") 
+              
+                // Create span for doctor ID
+                let spanid = document.createElement("span")
+                spanid.textContent = element.doctorid
+                spanid.classList.add("spn") // Add CSS class for styling
+              
+                // Create span for first name
+                let spanname = document.createElement("span")
+                spanname.textContent = element.doctorfirstname
+                spanname.classList.add("spn")
+              
+                // Create span for last name
+                let spanfamily = document.createElement("span")
+                spanfamily.textContent = element.doctorfamilyname
+                spanfamily.classList.add("spn")
+              
+                // Create span for speciality
+                let spanspec = document.createElement("span")
+                spanspec.textContent = element.specialityname
+                spanspec.classList.add("spn")
+
+                // Create span for city
+                let city = document.createElement("span")
+                city.textContent = element.cityname
+                city.classList.add("spn")
+
+                // Add all spans to the paragraph
+                par.appendChild(spanid)
+                par.appendChild(spanname)
+                par.appendChild(spanfamily)
+                par.appendChild(spanspec)
+                par.appendChild(city)
+
+                // Add paragraph to the result div
+                b.appendChild(par)
+            });
+        }
+        // Load doctors when page loads
+        loadData()
+
+        // Fetches cities from backend and populates the city dropdown
+        async function loadCity(){
+            const city = await fetch("/city")
+            const result = await city.json()
+            console.log(result)
+            
+            // Select the city dropdown element
+            let cityList = document.querySelector("#city")
+
+            // Loop through cities and create option elements
+            result.city.forEach(city => {
+                let opt = document.createElement("option")
+                // Set the value attribute to city ID
+                opt.setAttribute("value", city.cityid)
+                // Set the visible text to city name
+                opt.textContent = city.cityname
+                // Add option to the select element
+                cityList.appendChild(opt)
+            })
+        }
+        // Load cities when page loads
+        loadCity()
+
+        // Fetches specialities from backend and populates the speciality dropdown
+        async function loadSpeciality(){
+            const spec = await fetch("/speciality")
+            const result = await spec.json()
+            
+            // Select the speciality dropdown element
+            let specList = document.querySelector("#spec")
+
+            // Loop through specialities and create option elements
+            result.speciality.forEach(s => {
+                let opt = document.createElement("option")
+                opt.setAttribute("value", s.specialityid)
+                opt.textContent = s.specialityname
+                specList.appendChild(opt)
+            })
+        }
+        // Load specialities when page loads
+        loadSpeciality()
+
+        // Select form input elements
+        let drname = document.querySelector("#drname")
+        let drfamily = document.querySelector("#drfamily")
+        let drcity = document.querySelector("#city")
+        let drspec = document.querySelector("#spec")
+
+        // Select the form element
+        let frm = document.querySelector("#frm")
+        
+        // Add event listener for form submission
+        frm.addEventListener("submit", async (e) => {
+            // Prevent page refresh on form submit
+            e.preventDefault()
+            alert(drname.value + " " + drfamily.value + " " + drcity.value)
+
+            // Send POST request to add new doctor
+            // fetch is used to send a POST request to the server with the data from the form. 
+            // The server will then add the new doctor to the database and return a response. 
+            // We are then displaying that response on the page and reloading the data to show the new doctor in the list.
+            const addDoctor = await fetch("/doctor", {
+                method: "post",
+                headers: {
+                    "content-type": "application/json",
+                    "auth": "admin" // Authentication header
+                },
+                // Convert form data to JSON string
+                body: JSON.stringify({
+                    doctorfirstname: drname.value,
+                    doctorlastname: drfamily.value,
+                    specialityid: drspec.value,
+                    cityid: drcity.value
+                })
+            })
+            
+            // Get response as text
+            const answer = await addDoctor.text()
+            let wlc = document.querySelector(".wlc")
+            wlc.innerHTML = "<h3>answer</h3>"
+            // alert(answer)
+            
+            // Reload doctor list to show newly added doctor
+            loadData()
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    padding: 20px;
+    background: #fff0f3;
+    color: #333;
+}
+
+.maintitle {
+    margin-bottom: 20px;
+}
+
+/* Each doctor row */
+.result p {
+    background: white;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #f7b8c8;
+}
+
+.spn {
+    display: inline-block;
+    margin-right: 16px;
+}
+
+/* Form */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #f7b8c8;
+    max-width: 400px;
+    margin-top: 30px;
+}
+
+.input-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
+.input-control label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #555;
+}
+
+.input-control input,
+.input-control select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #e75480;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #c9365f;
+}
+
+.wlc {
+    margin-top: 12px;
+    color: green;
+}

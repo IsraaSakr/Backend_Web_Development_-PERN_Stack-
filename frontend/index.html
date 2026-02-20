@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // log to print
+        console.log("one")
+
+        // function to print two
+        // function printTwo() {
+        //     console.log("two")
+        // }
+        
+        // normal functions are sync and block the code execution until they are complete
+        // async function is used to handle asynchronous operations, you can't use await and call api without it
+        // await makes JavaScript wait until that promise settles and returns its result
+        async function load() {
+            const a = await fetch("https://jsonplaceholder.typicode.com/posts");
+            // to see the data fetched from the API
+            const b = await a.json();
+            console.log(b);
+            // the server response is stored in 'a'
+            console.log(a);
+        }
+        load()
+        console.log("three")
+    </script>
+</body>
+</html>
